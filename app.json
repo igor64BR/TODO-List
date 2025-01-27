@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "ijou-igor-baiocco",
+    "name": "TODO List",
     "slug": "ijou-igor-baiocco",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.industriall.ijouigorbaiocco"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9d12c267-569f-4a30-b77e-6532af58fc0f"
+      }
+    },
+    "owner": "industriall"
   }
 }
