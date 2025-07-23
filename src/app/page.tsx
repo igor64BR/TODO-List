@@ -1,95 +1,89 @@
-import Image from "next/image";
+'use client';
+
+import { MouseEventHandler, useEffect, useState } from "react";
 import styles from "./page.module.css";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+type TodoItemProps = {
+  title: string;
+  completed: boolean;
+}
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+type ItemProps = TodoItemProps & {
+  index: number;
+  onChange: (id: number) => void;
+}
+
+export default function Home() {
+  const [list, setList] = useState<TodoItemProps[]>([{
+    completed: false,
+    title: "teste"
+  }]);
+  const [newItem, setNewItem] = useState<string>("");
+
+  const onItemChange = (index: number) => {
+    setList(prev => prev.map((item, i) => i === index
+      ? { ...item, completed: !item.completed }
+      : item));
+  }
+
+  const onSave = () => {
+    if (!newItem.length) {
+      return;
+    }
+    setList(prev => [...prev, { completed: false, title: newItem }]);
+
+    setNewItem('');
+  }
+
+  return (
+    <div className={styles.todoListContainer}>
+      <div>
+        <header>
+          <h1>Todo List</h1>
+        </header>
+        <div className={styles.itemList}>
+          {list.map((x, index) => (
+            <Item
+              key={index}
+              {...x}
+              index={index}
+              onChange={onItemChange} />
+          ))}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <form className={styles.todoListForm}>
+          <input type="text" value={newItem} onChange={(event) => setNewItem(event.target.value)} />
+          <button type="button" onClick={onSave} className={styles.addButton}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+            </svg>
+          </button>
+        </form>
+      </div>
     </div>
   );
+}
+
+const Item = ({ index, title, completed = false, onChange }: ItemProps) => {
+  return (
+    <div className={styles.item}>
+      <div>
+        <input
+          type="checkbox"
+          id={"item-" + index}
+          name={"item-" + index}
+          onChange={() => onChange(index)}
+          checked={completed}
+        />
+        <label htmlFor={"item-" + index}>
+          <div className={styles.checkbox}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+            </svg>
+          </div>
+          <span>{title}</span>
+        </label>
+      </div>
+      <button type="button">Delete</button>
+    </div>
+  )
 }
