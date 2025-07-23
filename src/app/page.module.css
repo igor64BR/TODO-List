@@ -47,7 +47,7 @@
 
 .todoListForm>input:focus {
   scale: 1.1;
-  box-shadow: 0 0 10px black;
+  box-shadow: 0 0 10px 2px black;
 }
 
 .addButton {
@@ -59,14 +59,19 @@
   align-items: center;
   border: none;
 
-  transition: .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .addButton:hover {
   color: black;
   background-color: white;
   scale: 1.1;
-  box-shadow: 0 0 10px black;
+  box-shadow: 0 0 10px 2px black;
+}
+
+.addButton:active {
+  scale: 1;
+  box-shadow: none;
 }
 
 .todoListForm>button svg {
@@ -104,6 +109,7 @@
   cursor: pointer;
   flex: 1;
   height: 50px;
+  user-select: none;
 }
 
 .item label svg {

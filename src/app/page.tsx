@@ -11,19 +11,30 @@ type TodoItemProps = {
 type ItemProps = TodoItemProps & {
   index: number;
   onChange: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 export default function Home() {
-  const [list, setList] = useState<TodoItemProps[]>([{
-    completed: false,
-    title: "teste"
-  }]);
+  const [list, setList] = useState<TodoItemProps[]>([
+    {
+      completed: false,
+      title: "teste"
+    },
+    {
+      completed: true,
+      title: "teste"
+    }
+  ]);
   const [newItem, setNewItem] = useState<string>("");
 
   const onItemChange = (index: number) => {
     setList(prev => prev.map((item, i) => i === index
       ? { ...item, completed: !item.completed }
       : item));
+  }
+
+  const onItemDelete = (index: number) => {
+    setList(prev => [...prev.filter((_, i) => i !== index)]);
   }
 
   const onSave = () => {
@@ -33,6 +44,11 @@ export default function Home() {
     setList(prev => [...prev, { completed: false, title: newItem }]);
 
     setNewItem('');
+  }
+
+  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSave();
   }
 
   return (
@@ -47,10 +63,12 @@ export default function Home() {
               key={index}
               {...x}
               index={index}
-              onChange={onItemChange} />
+              onChange={onItemChange}
+              onDelete={onItemDelete}
+            />
           ))}
         </div>
-        <form className={styles.todoListForm}>
+        <form className={styles.todoListForm} onSubmit={onFormSubmit}>
           <input type="text" value={newItem} onChange={(event) => setNewItem(event.target.value)} />
           <button type="button" onClick={onSave} className={styles.addButton}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -63,7 +81,7 @@ export default function Home() {
   );
 }
 
-const Item = ({ index, title, completed = false, onChange }: ItemProps) => {
+const Item = ({ index, title, completed = false, onChange, onDelete }: ItemProps) => {
   return (
     <div className={styles.item}>
       <div>
@@ -83,7 +101,7 @@ const Item = ({ index, title, completed = false, onChange }: ItemProps) => {
           <span>{title}</span>
         </label>
       </div>
-      <button type="button">Delete</button>
+      <button type="button" onClick={() => onDelete(index)}>Delete</button>
     </div>
   )
 }
